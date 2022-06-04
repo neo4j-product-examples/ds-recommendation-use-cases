@@ -6,6 +6,7 @@ from neo4j_dwh_connector import *
 # note to create indexes in Neo4j
 # CREATE CONSTRAINT article_id_unique IF NOT EXISTS ON (n:Article) ASSERT n.articleId IS UNIQUE
 # CREATE CONSTRAINT customer_id_unique IF NOT EXISTS ON (n:Customer) ASSERT n.customerId  IS UNIQUE
+# CREATE CONSTRAINT product_code_unique IF NOT EXISTS ON (n:Product) ASSERT n.productCode  IS UNIQUE
 
 
 # COMMAND ----------
@@ -95,7 +96,11 @@ article_properties_source = Source(
       Column("GARMENT_GROUP_NAME", alias="garmentGroupName"),
       Column("DETAIL_DESC", alias="detailDesc")
     ],
-    printSchema=True
+    printSchema=True, 
+    partition=Partition(
+        number=1,
+        by="productCode"
+    )
 )
 
 article_properties_target =  Target(
@@ -109,6 +114,32 @@ article_properties_target =  Target(
 article_connector = Neo4jDWHConnector(spark, JobConfig(name="load-hm-article-properties", conf={}, hadoopConfiguration={}, source=article_properties_source, target=article_properties_target))
 # this will ingest the data from source to target database
 article_connector.run()
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Load Product & Product Relationships
+
+# COMMAND ----------
+
+product_target =  Target(
+    format="org.neo4j.spark.DataSource", 
+    options={**default_target_options, **{
+      "query" : '''
+        MATCH(a:Article {articleId: event.articleId})
+        MERGE(p:Product {productCode:event.productCode})
+          ON CREATE SET p.productName=event.productName
+        MERGE(a)-[r:IS_PRODUCT]->(p)
+        '''
+    }},
+    mode="Append"
+)
+
+# COMMAND ----------
+
+product_connector = Neo4jDWHConnector(spark, JobConfig(name="load-hm-product-relationship", conf={}, hadoopConfiguration={}, source=article_properties_source, target=product_target))
+# this will ingest the data from source to target database
+product_connector.run()
 
 # COMMAND ----------
 
@@ -130,8 +161,8 @@ transaction_source = Source(
     ],
     printSchema=True, 
     partition=Partition(
-        number=-1,
-        by=""
+        number=10,
+        by="articleId"
     )
 )
 
