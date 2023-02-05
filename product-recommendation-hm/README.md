@@ -1,11 +1,12 @@
-# Graph Connect 2022 Data Science Ecosystem Integration Demo
+# Graph Data Science Ecosystem Integration for Product Recommendation
+__A Graph Connect 2022 Demo__
 
 This demo leverages the [H&M Personalized Fashion Recommendations Dataset](https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations/data) to show:
 1. using the [Neo4j Data Warehouse (DWH) Connector](https://github.com/neo4j-contrib/neo4j-dwh-connector) on a spark cluster to load tens of millions of records from Snowflake into a Neo4j graph database
 2. using unsupervised graph machine learning to enrich a knowledge graph with item similarity relationships that enable faster and more focused real-time personalized recommendation queries. Specifically, we use [FastRP node embeddings](https://neo4j.com/docs/graph-data-science/current/machine-learning/node-embeddings/fastrp/) with [K-Nearest-Neighbor (KNN)](https://neo4j.com/docs/graph-data-science/current/algorithms/knn/) to infer similar articles of clothing based on common customer interactions and product types. 
 
 ## Prerequisites:
- - Snowflake - https://www.snowflake.com/. A free trial will work.
+ - Snowflake - [https://www.snowflake.com/](). A free trial will work.
  - Spark 3.x with Scala 2.12 or 2.13.  You will also need the following libraries installed on your spark cluster
    - `org.neo4j:neo4j-dwh-connector_<scala version>:1.0.0_for_spark_3`
    - `org.neo4j:neo4j-connector-apache-spark_<scala version>:4.1.2_for_spark_3`
