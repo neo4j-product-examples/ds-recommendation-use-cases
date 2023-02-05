@@ -1,6 +1,6 @@
 # News Recommendations In Graph - Demos & Examples
-This directory holds multiple examples of news recommendation in graph leveraging [Neo4j](https://neo4j.com/)
-and the [Graph Data Science](https://neo4j.com/docs/graph-data-science/current/)
+This directory holds multiple examples of news content recommendation in graph leveraging [Neo4j](https://neo4j.com/)
+and [Graph Data Science](https://neo4j.com/docs/graph-data-science/current/)
 
 ## Current Demos & Examples:
 1. `embeddings-webinar-2021-11`: Examples of using multiple types of node embeddings and exploring the use of 
